@@ -10,7 +10,7 @@ import com.mc2.dev.resource.MatchResource;
 import com.mc2.dev.resource.PlayResource;
 
 
-@ApplicationPath("api")
+@ApplicationPath("/")
 public class App extends Application
 {
     public static void main( String[] args )
