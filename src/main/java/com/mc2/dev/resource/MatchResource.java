@@ -8,6 +8,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.mc2.dev.goserver.DBConnector;
+
 
 @Path("match")
 public class MatchResource implements IMatchResource {
@@ -36,7 +38,7 @@ public class MatchResource implements IMatchResource {
     @GET
     @Path("test")
 	public String testIt() {
-		return "i am alive";
+		return DBConnector.getInstance().getTestString();
 	}
 
 }

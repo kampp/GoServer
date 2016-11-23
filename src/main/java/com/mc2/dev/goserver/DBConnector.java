@@ -2,15 +2,15 @@ package com.mc2.dev.goserver;
 
 import java.sql.*;
 
-import org.apache.tomcat.jdbc.*;
+
 
 public class DBConnector {
 
 	//-------------------------------------------------------
 	// singleton attributes
-	private DBConnector singleton;
+	private static DBConnector singleton;
 	
-	public DBConnector getInstance() {
+	public static DBConnector getInstance() {
 		if (singleton == null) {
 			singleton = new DBConnector();
 		}
@@ -19,18 +19,28 @@ public class DBConnector {
 	//-------------------------------------------------------
 	
 	private Connection connection;
-	private String url;
-	private String user;
-	private String password;
+	private String url = "jdbc:mysql://localhost:3306/server_data";
+	private String user = "root";
+	private String password = "";
+	
+	public DBConnector() {
+		connect();
+	}
 	
 	public boolean connect() {
 		try {
+			Class.forName("org.mariadb.jdbc.Driver");
+			
 			connection = DriverManager.getConnection(url, user, password);
 		}
 		catch (SQLException sqlEx) {
 			// TODO push message to logger
 			System.out.println(sqlEx.getMessage());
 			return false;
+		}
+		catch (Exception ex) {
+			// TODO push message to logger
+			System.out.println(ex.getMessage());
 		}
 		return true;
 	}
@@ -91,6 +101,23 @@ public class DBConnector {
 		return null;
 	}
 	
+	
+	public String getTestString() {
+		
+		String query = "select * from test_data where id = 1";
+		try {
+			Statement st = connection.createStatement();
+			ResultSet rs = st.executeQuery(query);
+			while (rs.next()) {
+				return rs.getString("text");
+			}
+		}
+		catch(SQLException sqlEx) {
+			System.out.println(sqlEx.getMessage());
+		}
+		
+		return "the mouse is dead";
+	}
 	
 
 }
