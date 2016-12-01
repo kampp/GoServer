@@ -7,6 +7,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 //-------------------------------------------------------
 // class FirebaseMsgService 
 //
@@ -18,14 +21,12 @@ import java.net.URL;
 //-------------------------------------------------------
 public class FirebaseMsgService {
 	
-	private boolean send(String token, String data) {
+	private boolean send(String token, JSONObject jsobj) {
 		String urlStr = "https://fcm.googleapis.com/fcm/send";
 		String serverKey ="AAAAo1itxNg:APA91bFmvy88fJirDEJSCpxFNVQHjrdHuvJxk0MJ9lT6sSGCH8PYYs82IWd_YV6ljRyx9V1KreQ1ZzL-ZouxkjNo4XU_-kVEFJTBF1yHAMN2PYdJcK-FSHnI_a6znJQ1l4DLO4xUtb7RQC0t0x8fdUWjqjfWQdhTHg";
-	 	String jsonReceiver = "{\"to\" : \"eF9i1-eQY1E:APA91bGkwerKnjX7Z1gegD_0vlQjTsRlBsOVjujmrcwuLnFZeq3MulJV-piY0Gi7zr89X2om832Fx_eq2uir-2i2RR8tR-T2vciYTLxjeAIAv8aQfu_0cSvAWK2Jzv2_fPqKuPijc6Ob\"}";
 		HttpURLConnection connection = null;
 		
-		// build complete json-string
-		String jsonStr = "{\"to\" : \"" + token + "\", data:\" " + data + "\"}";
+		jsobj.put("to", token);
 		
 		 try {
 		    //Create connection
@@ -40,7 +41,7 @@ public class FirebaseMsgService {
 
 		    //Send request
 		    DataOutputStream wr = new DataOutputStream (connection.getOutputStream());
-		    wr.writeBytes(jsonReceiver);
+		    wr.writeBytes(jsobj.toJSONString());
 		    wr.close();		
 
 		 } catch (Exception e) {
@@ -94,13 +95,25 @@ public class FirebaseMsgService {
 		
 		boolean success1 = false;
 		boolean success2 = false;
+		JSONObject data = new JSONObject();
+		JSONObject output = new JSONObject();
+		// TODO which user starts? send the info to the user
 		
-		if (send(token1, "matched")) {
+		
+		data.put("type", "matched");
+		data.put("start", true);
+		output.put("data", data);
+		
+		if (send(token1, output)) {
 			success1 = true;
 		}
 		// TODO else: retry
 		
-		if (send(token2, "matched")) {
+		output.clear();
+		data.remove("start");
+		data.put("start", false);
+		output.put("data", data);
+		if (send(token2, output)) {
 			success1 = true;
 		}
 		// TODO else: retry
@@ -118,7 +131,13 @@ public class FirebaseMsgService {
 	//-------------------------------------------------------
 	public boolean notifyMatchTimeout(String token) {
 		
-		if (send(token, "match_timeout")) {
+		JSONObject data = new JSONObject();
+		JSONObject output = new JSONObject();
+
+		data.put("type", "match_timeout");
+		output.put("data", data);
+		
+		if (send(token, output)) {
 			return true;
 		}
 		// TODO else : retry
@@ -135,7 +154,13 @@ public class FirebaseMsgService {
 	//-------------------------------------------------------
 	public boolean notifyMovePlayed(String token) {
 
-		if (send(token, "move_played")) {
+		JSONObject data = new JSONObject();
+		JSONObject output = new JSONObject();
+
+		data.put("type", "move_played");
+		output.put("data", data);
+		
+		if (send(token, output)) {
 			return true;
 		}
 		// TODO else : retry
@@ -153,7 +178,13 @@ public class FirebaseMsgService {
 	//-------------------------------------------------------
 	public boolean notifyPlayTimeout(String token) {
 		
-		if (send(token, "play_timeout")) {
+		JSONObject data = new JSONObject();
+		JSONObject output = new JSONObject();
+
+		data.put("type", "play_timeout");
+		output.put("data", data);
+		
+		if (send(token, output)) {
 			return true;
 		}
 		// TODO else : retry

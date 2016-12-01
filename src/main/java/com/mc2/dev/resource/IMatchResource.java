@@ -15,14 +15,6 @@ public interface IMatchResource {
     Response postMatch() throws Exception;
 
     /**
-     * get matched partner
-     * 
-     * @param token
-     *     
-     */
-    Response getMatchByToken(@PathParam("token")String token)throws Exception;
-
-    /**
      * delete user entry from queue
      * 
      * @param token

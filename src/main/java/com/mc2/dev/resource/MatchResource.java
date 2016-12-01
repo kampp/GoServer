@@ -17,22 +17,18 @@ public class MatchResource implements IMatchResource {
     @POST
     @Consumes(	MediaType.APPLICATION_JSON	)
 	public Response postMatch() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-    @GET
-    @Path("{token}")
-	public Response getMatchByToken(String token) throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
     @DELETE
     @Path("{token}")
 	public Response deleteMatchByToken(String token) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		
+    	if (DBConnector.getInstance().deleteMatchRequest(token)) {
+    		Response.ok();
+    	};
+    	
+    	return null;
 	}
 
     @GET
