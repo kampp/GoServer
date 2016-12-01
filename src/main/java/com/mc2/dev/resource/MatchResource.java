@@ -5,6 +5,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -15,20 +16,25 @@ import com.mc2.dev.goserver.DBConnector;
 public class MatchResource implements IMatchResource {
 
     @POST
+    @Path("{token}")
     @Consumes(	MediaType.APPLICATION_JSON	)
-	public Response postMatch() throws Exception {
-		return null;
+	public Response postMatch(@PathParam("token") String token, String jsonString) throws Exception {
+		
+    	if (DBConnector.getInstance().insertMatchRequest(token, jsonString)) {
+    		return Response.ok().build();
+    	}
+    	return Response.serverError().build();
 	}
 
     @DELETE
     @Path("{token}")
-	public Response deleteMatchByToken(String token) throws Exception {
+	public Response deleteMatchByToken(@PathParam("token") String token) throws Exception {
 		
     	if (DBConnector.getInstance().deleteMatchRequest(token)) {
-    		Response.ok();
+    		return Response.ok().build();
     	};
     	
-    	return null;
+    	return Response.noContent().build();
 	}
 
     @GET

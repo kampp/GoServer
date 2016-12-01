@@ -15,13 +15,14 @@ public interface IPlayResource {
      * @param token
      *     
      */
-    Response getPlayByToken(@PathParam("token")String token)throws Exception;
+    Response getPlayByToken(String token)throws Exception;
 
     /**
      * send move information
      * 
      * @param token
+     * @param message
      *     
      */
-    Response postPlayByToken(@PathParam("token")String token)throws Exception;
+    Response postPlayByToken(String token, String message)throws Exception;
 }

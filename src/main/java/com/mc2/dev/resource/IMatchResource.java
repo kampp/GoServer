@@ -1,7 +1,6 @@
 
 package com.mc2.dev.resource;
 
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.*;
 
 public interface IMatchResource {
@@ -11,8 +10,11 @@ public interface IMatchResource {
     /**
      * send data for matchmaking
      * 
+     * @param token
+     * @param message
+     * 
      */
-    Response postMatch() throws Exception;
+    Response postMatch(String token, String message) throws Exception;
 
     /**
      * delete user entry from queue
@@ -20,7 +22,7 @@ public interface IMatchResource {
      * @param token
      *     
      */
-    Response deleteMatchByToken(@PathParam("token")String token)  throws Exception;
+    Response deleteMatchByToken(String token)  throws Exception;
 
 
 
