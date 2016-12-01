@@ -2,6 +2,9 @@ package com.mc2.dev.goserver;
 
 import java.sql.*;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 
 
 public class DBConnector {
@@ -66,16 +69,50 @@ public class DBConnector {
 	}
 	
 	//-------------------------------------------------------
-	// int insertMatchRequest
+	// boolean insertMatchRequest
 	// String token: the firebase token of the client app
 	// metaInformation: all gameMetaInformation elements
 	//
 	// inserts a client app into the match_requested table
 	//
-	// return the entry-id or 0 if failed
+	// return true if the insert was successfull
 	//-------------------------------------------------------
-	public int insertMatchRequest(String token, GameMetaInformation metaInformation) {
-		return 0;
+	public boolean insertMatchRequest(String token, String jsonString) {
+    	JSONParser parser = new JSONParser();
+    	String boardSizeStr = "";
+    	String playerName = "";
+    	String playerRankStr = "";
+    	
+    	try {
+    		JSONObject jsobj = (JSONObject) parser.parse(jsonString);
+    		boardSizeStr = (String) jsobj.get("boardisze");
+        	playerName = (String) jsobj.get("nickname");
+        	playerRankStr = (String) jsobj.get("rank");
+    	}
+    	catch (Exception e) {
+    		// TODO push to logger
+    		return false;
+    	}
+    	
+    	int boardSize = Integer.parseInt(boardSizeStr);
+    	int rank = Integer.parseInt(playerRankStr);
+    	
+    	try {
+    		Statement stmt = singleton.connection.createStatement();
+    		String query = "insert into match_requested values (" 
+    		+ token + ","
+    		+ System.currentTimeMillis() + ","
+    		+ boardSize + ","
+    		+ playerName + ","
+    		+ rank + ",";
+    		
+    		return true;
+    	}
+    	catch (Exception e) {
+    		// TODO push to logger
+    		return false;
+    	}
+    	
 	}
 	
 	//-------------------------------------------------------
@@ -106,7 +143,7 @@ public class DBConnector {
 		
 		String query = "select * from test_data where id = 1";
 		try {
-			Statement st = connection.createStatement();
+			Statement st = singleton.connection.createStatement();
 			ResultSet rs = st.executeQuery(query);
 			while (rs.next()) {
 				return rs.getString("text");
