@@ -1,10 +1,11 @@
 package com.mc2.dev.goserver;
 
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
 
 
 public class DBConnector {
@@ -20,6 +21,8 @@ public class DBConnector {
 		return singleton;
 	}
 	//-------------------------------------------------------
+	
+	private static final Logger LOGGER = Logger.getLogger( DBConnector.class.getName() );
 	
 	private Connection connection;
 	private String url = "jdbc:mysql://localhost:3306/server_data";
@@ -37,13 +40,11 @@ public class DBConnector {
 			connection = DriverManager.getConnection(url, user, password);
 		}
 		catch (SQLException sqlEx) {
-			// TODO push message to logger
-			System.out.println(sqlEx.getMessage());
+			LOGGER.log(Level.ALL, sqlEx.getMessage());
 			return false;
 		}
-		catch (Exception ex) {
-			// TODO push message to logger
-			System.out.println(ex.getMessage());
+		catch (Exception e) {
+			LOGGER.log(Level.ALL, e.getMessage());
 		}
 		return true;
 	}
@@ -61,8 +62,7 @@ public class DBConnector {
 				connection.close();
 			}
 			catch (SQLException sqlEx) {
-				// TODO push message to logger
-				System.out.println(sqlEx.getMessage());
+				LOGGER.log(Level.ALL, sqlEx.getMessage());
 			}
 		}
 
@@ -90,7 +90,7 @@ public class DBConnector {
         	playerRankStr = (String) jsobj.get("rank");
     	}
     	catch (Exception e) {
-    		// TODO push to logger
+    		LOGGER.log(Level.ALL, e.getMessage());
     		return false;
     	}
     	
@@ -109,7 +109,7 @@ public class DBConnector {
     		return true;
     	}
     	catch (Exception e) {
-    		// TODO push to logger
+    		LOGGER.log(Level.ALL, e.getMessage());
     		return false;
     	}
     	
@@ -124,7 +124,17 @@ public class DBConnector {
 	// return true if a client has been found and removed
 	//-------------------------------------------------------
 	public boolean deleteMatchRequest(String token) {
-		return true;
+
+		try {
+			Statement stmt = connection.createStatement();
+			String query = "delete from match_requested where token = " + token;
+			stmt.executeQuery(query);
+			return true;
+		}
+		catch (Exception e) {
+			LOGGER.log(Level.ALL, e.getMessage());
+			return false;
+		}
 	}
 	
 	
@@ -133,9 +143,18 @@ public class DBConnector {
 	// 
 	// return a ResultSet containing all entries
 	// of the match_requested table
+	// the first element in the result set is the last one inserted
 	//-------------------------------------------------------
 	public ResultSet getMatchRequested()  {
-		return null;
+		try {
+			Statement stmt = connection.createStatement();
+			String query = "select * from match_requested order by created_at desc";
+			return stmt.executeQuery(query);
+		}
+		catch (Exception e) {
+			LOGGER.log(Level.ALL, e.getMessage());
+			return null;
+		}
 	}
 	
 	
@@ -150,7 +169,7 @@ public class DBConnector {
 			}
 		}
 		catch(SQLException sqlEx) {
-			System.out.println(sqlEx.getMessage());
+			LOGGER.log(Level.ALL, sqlEx.getMessage());
 		}
 		
 		return "the mouse is dead";

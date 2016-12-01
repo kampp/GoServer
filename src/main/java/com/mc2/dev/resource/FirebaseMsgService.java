@@ -6,9 +6,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import com.mc2.dev.goserver.DBConnector;
 
 //-------------------------------------------------------
 // class FirebaseMsgService 
@@ -21,20 +25,22 @@ import org.json.simple.JSONObject;
 //-------------------------------------------------------
 public class FirebaseMsgService {
 	
+	private static final Logger LOGGER = Logger.getLogger( DBConnector.class.getName() );
+	private static final String SERVERKEY = "AAAAo1itxNg:APA91bFmvy88fJirDEJSCpxFNVQHjrdHuvJxk0MJ9lT6sSGCH8PYYs82IWd_YV6ljRyx9V1KreQ1ZzL-ZouxkjNo4XU_-kVEFJTBF1yHAMN2PYdJcK-FSHnI_a6znJQ1l4DLO4xUtb7RQC0t0x8fdUWjqjfWQdhTHg";
+	private static final String FIREBASEURL = "https://fcm.googleapis.com/fcm/send";	
+	
 	private boolean send(String token, JSONObject jsobj) {
-		String urlStr = "https://fcm.googleapis.com/fcm/send";
-		String serverKey ="AAAAo1itxNg:APA91bFmvy88fJirDEJSCpxFNVQHjrdHuvJxk0MJ9lT6sSGCH8PYYs82IWd_YV6ljRyx9V1KreQ1ZzL-ZouxkjNo4XU_-kVEFJTBF1yHAMN2PYdJcK-FSHnI_a6znJQ1l4DLO4xUtb7RQC0t0x8fdUWjqjfWQdhTHg";
 		HttpURLConnection connection = null;
 		
 		jsobj.put("to", token);
 		
 		 try {
 		    //Create connection
-		    URL url = new URL(urlStr);
+		    URL url = new URL(FIREBASEURL);
 		    connection = (HttpURLConnection) url.openConnection();
 		    connection.setRequestMethod("POST");
 		    connection.setRequestProperty("Content-Type", "application/json");
-		    connection.setRequestProperty("Authorization", "key=" + serverKey);
+		    connection.setRequestProperty("Authorization", "key=" + SERVERKEY);
 		    
 		    connection.setUseCaches(false);
 		    connection.setDoOutput(true);
@@ -45,8 +51,7 @@ public class FirebaseMsgService {
 		    wr.close();		
 
 		 } catch (Exception e) {
-			 // TODO push to logger
-			 System.out.println(e.getMessage());
+			 LOGGER.log(Level.ALL, e.getMessage());
 			 return false;
 		 }
 		 
@@ -63,9 +68,8 @@ public class FirebaseMsgService {
 		    rd.close();
 		    return checkResponse(response.toString());
 		  } catch (Exception e) {
-			  // TODO push to logger
-		    e.printStackTrace();
-		    return false;
+			  LOGGER.log(Level.ALL, e.getMessage());
+			  return false;
 		  }
 		 
 	}
