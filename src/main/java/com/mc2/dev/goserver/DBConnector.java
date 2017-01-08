@@ -98,13 +98,13 @@ public class DBConnector {
     	int rank = Integer.parseInt(playerRankStr);
     	
     	try {
-    		Statement stmt = singleton.connection.createStatement();
+    		Statement stmt = connection.createStatement();
     		String query = "insert into match_requested values (" 
     		+ token + ","
     		+ System.currentTimeMillis() + ","
     		+ boardSize + ","
     		+ playerName + ","
-    		+ rank + ",";
+    		+ rank + ");";
     		
     		return true;
     	}
@@ -127,7 +127,7 @@ public class DBConnector {
 
 		try {
 			Statement stmt = connection.createStatement();
-			String query = "delete from match_requested where token = " + token;
+			String query = "delete match_requested where token = " + token;
 			stmt.executeQuery(query);
 			return true;
 		}

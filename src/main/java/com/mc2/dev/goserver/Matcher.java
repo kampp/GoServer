@@ -1,10 +1,14 @@
 package com.mc2.dev.goserver;
 
 import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.mc2.dev.resource.FirebaseMsgService;
 
 public class Matcher implements Runnable {
+	
+	private static Logger LOGGER = Logger.getLogger( Matcher.class.getName() );
 	
 	private static long TIMEOUTITME = 300000; // 5 minutes
 
@@ -44,11 +48,13 @@ public class Matcher implements Runnable {
 			}
 			if (matched) {
 				// TODO generate meta info
-				fms.notifyPairingSuccess(tokenA, tokenB);
+				DBConnector.getInstance().deleteMatchRequest(tokenA);
+				DBConnector.getInstance().deleteMatchRequest(tokenB);
+				fms.notifyPairingSuccess(tokenA, tokenB, true);
 			}
 		}
 		catch (Exception e) {
-			
+			LOGGER.log(Level.ALL, e.getMessage());
 		}
 	}
 
