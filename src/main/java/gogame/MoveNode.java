@@ -24,10 +24,15 @@ public class MoveNode implements Serializable {
     private long currentTime;
     private byte currentOtPeriods;
     
+    // generate root move node
+    public MoveNode() {
+    	//TODO
+    }
+    
     // generates a new MoveNode by the given JSON-String
     // the string is recieved through the POST:[..]/play method
     public MoveNode(String jsonStr, boolean isBlacksMove) {
-    	
+    	//TODO
     }
 
 

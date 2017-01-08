@@ -1,10 +1,12 @@
-package com.mc1.dev.goapp;
+package com.mc2.dev.goserver;
 
 
 import java.util.ArrayList;
 import java.util.Stack;
 
 import gogame.GameMetaInformation;
+import gogame.MoveNode;
+import gogame.RunningGame;
 
 public class GameController {
 
@@ -64,8 +66,8 @@ public class GameController {
 
         int counter = 0;
 
-        ArrayList<ArrayList<Integer>> moveIndexListBuffer = new ArrayList<>();
-        ArrayList<Integer> tempList = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> moveIndexListBuffer = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> tempList = new ArrayList<Integer>();
 
         // go through all move nodes
         for (int i = 0; i < game.getMainTreeIndices().size(); i++) {
@@ -76,7 +78,7 @@ public class GameController {
                 int stone[] = {move.getPosition()[0], move.getPosition()[1]};
 
                 if (isPrisoner(game, stone, !isBlacksMove)) { // if the found stone is a prisoner
-                    ArrayList<Integer> temp = new ArrayList<>(tempList);
+                    ArrayList<Integer> temp = new ArrayList<Integer>(tempList);
                     moveIndexListBuffer.add(temp);
                     counter++;
                 }
@@ -157,7 +159,7 @@ public class GameController {
         if (game.getMainTreeIndices().size() == 0) {
             return false;
         }
-        ArrayList<Integer> tempList = new ArrayList<>(game.getMainTreeIndices().subList(0, (game.getMainTreeIndices().size() - 1)));
+        ArrayList<Integer> tempList = new ArrayList<Integer>(game.getMainTreeIndices().subList(0, (game.getMainTreeIndices().size() - 1)));
         MoveNode last = game.getSpecificNode(tempList);
 
         return (current.getActionType() == GameMetaInformation.actionType.PASS &&
