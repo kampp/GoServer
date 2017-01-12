@@ -1,11 +1,15 @@
 package com.mc2.dev.goserver;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
+import gogame.MoveNode;
+import gogame.RunningGame;
 
 
 public class DBConnector {
@@ -175,5 +179,55 @@ public class DBConnector {
 		return "the mouse is dead";
 	}
 	
+	//-------------------------------------------------------
+	// boolean insertMoveNode
+	// 
+	// inserts the given MoveNode into the database
+	//-------------------------------------------------------
+	public boolean insertMoveNode(MoveNode move, int gameID) {
+		try {
+    		Statement stmt = connection.createStatement();
+    		String query = "insert into movenodes values (" 
+    		+ gameID + ","
+    		+ move.getPosition()[0] + ","
+    		+ move.getPosition()[1] + ","
+    		+ move.isBlacksMove() + ");";
+    		return true;
+    	}
+    	catch (Exception e) {
+    		LOGGER.log(Level.ALL, e.getMessage());
+    		return false;
+    	}
+	}
+	
+	//-------------------------------------------------------
+	// int insertGame
+	// 
+	// inserts the given game into the database
+	// returns the id of the entry
+	//-------------------------------------------------------
+	public int insertGame(RunningGame game, String tokenA, String tokenB) {
+		
+	}
+	
 
+	//-------------------------------------------------------
+	// int getGameIDbyToken
+	// 
+	// returns the game id of the game which contains token as
+	// a player. returns 0, if no game is found
+	//-------------------------------------------------------
+	public int getGameIDbyToken(String token) {
+		
+	}
+	
+	//-------------------------------------------------------
+	// ArrayList<MoveNode getMoveNodes
+	// 
+	// gets all move nodes belonging to the given game
+	//-------------------------------------------------------
+	public ArrayList<MoveNode> getMoveNodes(int gameID) {
+			
+	}
+	
 }

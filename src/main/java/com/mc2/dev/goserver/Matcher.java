@@ -48,9 +48,12 @@ public class Matcher implements Runnable {
 			}
 			if (matched) {
 				// TODO generate meta info
+				// TODO who starts
 				DBConnector.getInstance().deleteMatchRequest(tokenA);
 				DBConnector.getInstance().deleteMatchRequest(tokenB);
 				fms.notifyPairingSuccess(tokenA, tokenB, true);
+				
+				GameController.getInstance().createOnlineGame(tokenA, tokenB);
 			}
 		}
 		catch (Exception e) {
