@@ -184,14 +184,16 @@ public class DBConnector {
 	// 
 	// inserts the given MoveNode into the database
 	//-------------------------------------------------------
-	public boolean insertMoveNode(MoveNode move, int gameID) {
+	public boolean insertMoveNode(MoveNode move, int gameID, int parentID) {
 		try {
     		Statement stmt = connection.createStatement();
     		String query = "insert into movenodes values (" 
     		+ gameID + ","
+    		+ parentID + ","
     		+ move.getPosition()[0] + ","
     		+ move.getPosition()[1] + ","
     		+ move.isBlacksMove() + ");";
+    		ResultSet rs = stmt.executeQuery(query);
     		return true;
     	}
     	catch (Exception e) {
@@ -206,8 +208,27 @@ public class DBConnector {
 	// inserts the given game into the database
 	// returns the id of the entry
 	//-------------------------------------------------------
-	public int insertGame(RunningGame game, String tokenA, String tokenB) {
-		
+	public int insertGame(RunningGame game, String tokenA, String tokenB, int rootNodeID) {
+		try {
+			String query = "insert into movenodes values (?,?,?)";
+    		PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+    		stmt.setInt(1,  rootNodeID);
+    		stmt.setString(2, tokenA);
+    		stmt.setString(3, tokenB);
+    		stmt.executeUpdate();
+
+    		ResultSet rs = stmt.getGeneratedKeys();
+    		if (rs.next()) {
+    		   return rs.getInt(1);
+    		}
+    		else {
+    			return 0;
+    		}
+    	}
+    	catch (Exception e) {
+    		LOGGER.log(Level.ALL, e.getMessage());
+    		return 0;
+    	}
 	}
 	
 
