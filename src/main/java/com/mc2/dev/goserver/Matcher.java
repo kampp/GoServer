@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.mc2.dev.gogame.GameMetaInformation;
 import com.mc2.dev.resource.FirebaseMsgService;
 
 public class Matcher implements Runnable {
@@ -47,13 +48,14 @@ public class Matcher implements Runnable {
 				}
 			}
 			if (matched) {
-				// TODO generate meta info
+				GameMetaInformation gmi = new GameMetaInformation();
+				gmi.setBoardSize(boardSize);
 				// TODO who starts
 				DBConnector.getInstance().deleteMatchRequest(tokenA);
 				DBConnector.getInstance().deleteMatchRequest(tokenB);
 				fms.notifyPairingSuccess(tokenA, tokenB, true);
 				
-				GameController.getInstance().createOnlineGame(tokenA, tokenB);
+				GameController.getInstance().createOnlineGame(gmi, tokenA, tokenB, true);
 			}
 		}
 		catch (Exception e) {

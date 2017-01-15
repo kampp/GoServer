@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.mc2.dev.goserver.DBConnector;
+import com.mc2.dev.goserver.Matcher;
 
 
 @Path("match")
@@ -21,6 +22,8 @@ public class MatchResource implements IMatchResource {
 	public Response postMatch(@PathParam("token") String token, String jsonString) throws Exception {
 		
     	if (DBConnector.getInstance().insertMatchRequest(token, jsonString)) {
+    		Matcher matcher = new Matcher();
+    		matcher.run();
     		return Response.ok().build();
     	}
     	return Response.serverError().build();

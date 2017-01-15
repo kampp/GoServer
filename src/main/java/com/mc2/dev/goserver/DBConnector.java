@@ -8,8 +8,8 @@ import java.util.logging.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import gogame.MoveNode;
-import gogame.RunningGame;
+import com.mc2.dev.gogame.MoveNode;
+import com.mc2.dev.gogame.RunningGame;
 
 
 public class DBConnector {
@@ -208,13 +208,12 @@ public class DBConnector {
 	// inserts the given game into the database
 	// returns the id of the entry
 	//-------------------------------------------------------
-	public int insertGame(RunningGame game, String tokenA, String tokenB, int rootNodeID) {
+	public int insertGame(RunningGame game, String tokenA, String tokenB) {
 		try {
 			String query = "insert into movenodes values (?,?,?)";
     		PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-    		stmt.setInt(1,  rootNodeID);
-    		stmt.setString(2, tokenA);
-    		stmt.setString(3, tokenB);
+    		stmt.setString(1, tokenA);
+    		stmt.setString(2, tokenB);
     		stmt.executeUpdate();
 
     		ResultSet rs = stmt.getGeneratedKeys();

@@ -4,9 +4,9 @@ package com.mc2.dev.goserver;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import gogame.GameMetaInformation;
-import gogame.MoveNode;
-import gogame.RunningGame;
+import com.mc2.dev.gogame.GameMetaInformation;
+import com.mc2.dev.gogame.MoveNode;
+import com.mc2.dev.gogame.RunningGame;
 
 public class GameController {
 
@@ -35,7 +35,26 @@ public class GameController {
         SUICIDE,
         END,
     }
-
+    
+    // ----------------------------------------------------------------------
+    // RunningGame createOnlineGame()
+    //
+    // returns a running game with the root node added. this game is based on 
+    // firebase-tokens as players 
+    // requires both token, as well as the info, if A starts or not
+    // ----------------------------------------------------------------------
+    public RunningGame createOnlineGame(GameMetaInformation gmi, String tokenA, String tokenB, boolean aStarts) {
+    	
+    	RunningGame rg = new RunningGame(gmi);
+    	MoveNode root = rg.getCurrentNode();
+    	
+    	int gameID = DBConnector.getInstance().insertGame(rg, tokenA, tokenB);
+    	DBConnector.getInstance().insertMoveNode(root, gameID, 0);
+    	
+   
+    	return rg;
+    }
+    
     // ----------------------------------------------------------------------
     // function checkAction()
     //
