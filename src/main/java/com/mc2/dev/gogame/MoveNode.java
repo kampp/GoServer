@@ -1,4 +1,4 @@
-package gogame;
+package com.mc2.dev.gogame;
 
 import java.io.Serializable;
 import java.util.ArrayList;
