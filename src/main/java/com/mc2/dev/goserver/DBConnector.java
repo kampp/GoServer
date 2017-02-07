@@ -89,7 +89,7 @@ public class DBConnector {
     	
     	try {
     		JSONObject jsobj = (JSONObject) parser.parse(jsonString);
-    		boardSizeStr = (String) jsobj.get("boardisze");
+    		boardSizeStr = (String) jsobj.get("boardsize");
         	playerName = (String) jsobj.get("nickname");
         	playerRankStr = (String) jsobj.get("rank");
     	}
