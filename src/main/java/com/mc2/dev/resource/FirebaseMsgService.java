@@ -85,6 +85,10 @@ public class FirebaseMsgService {
 	private boolean checkResponse(String response) {
 		return false;
 	}
+	
+	public void sendTest(String token) {
+		send(token, dummy);
+	}
 
 	//-------------------------------------------------------
 	// notifyPairingSuccess

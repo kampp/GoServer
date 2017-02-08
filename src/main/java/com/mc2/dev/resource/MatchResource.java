@@ -43,7 +43,17 @@ public class MatchResource implements IMatchResource {
     @GET
     @Path("test")
 	public String testIt() {
+    	FirebaseMsgService fms = new FirebaseMsgService();
+    	fms.sendTest("hardcode");
 		return DBConnector.getInstance().getTestString();
+	}
+    
+    @GET
+    @Path("testFirebase")
+	public String testIT2() {
+    	FirebaseMsgService fms = new FirebaseMsgService();
+    	fms.sendTest("hardcode");
+		return "";
 	}
 
 }
