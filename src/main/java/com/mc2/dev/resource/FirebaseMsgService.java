@@ -86,8 +86,14 @@ public class FirebaseMsgService {
 		return false;
 	}
 	
+	
+	//-------------------------------------------------------
+	// void sendTest
+	// TODO remove after usage
+	// this Method is only for testing the firebase messages
+	//-------------------------------------------------------
 	public void sendTest(String token) {
-		send(token, dummy);
+		send(token, new JSONObject());
 	}
 
 	//-------------------------------------------------------

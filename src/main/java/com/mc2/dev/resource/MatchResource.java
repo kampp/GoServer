@@ -9,6 +9,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+
 import com.mc2.dev.goserver.DBConnector;
 import com.mc2.dev.goserver.Matcher;
 
@@ -52,7 +53,7 @@ public class MatchResource implements IMatchResource {
     @Path("testFirebase")
 	public String testIT2() {
     	FirebaseMsgService fms = new FirebaseMsgService();
-    	fms.sendTest("hardcode");
+    	fms.sendTest("hardcodeToken");
 		return "";
 	}
 

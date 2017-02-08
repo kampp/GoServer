@@ -83,34 +83,35 @@ public class DBConnector {
 	//-------------------------------------------------------
 	public boolean insertMatchRequest(String token, String jsonString) {
     	JSONParser parser = new JSONParser();
-    	int boardSize;
     	String playerName = "";
-    	int playerRank;
+    	Long boardSize;
+    	Long playerRank;
     	
     	try {
     		JSONObject jsobj = (JSONObject) parser.parse(jsonString);
-    		boardSize = (Integer) jsobj.get("boardsize");
         	playerName = (String) jsobj.get("nickname");
-        	playerRank = (Integer) jsobj.get("rank");
+    		boardSize = (Long) jsobj.get("boardsize");
+        	playerRank = (Long) jsobj.get("rank");
     	}
     	catch (Exception e) {
-    		LOGGER.log(Level.ALL, e.getMessage());
     		return false;
     	}
     	
     	
     	try {
     		Statement stmt = connection.createStatement();
-    		String query = "insert into match_requested values (" 
-    		+ token + ","
-    		+ System.currentTimeMillis() + ","
-    		+ boardSize + ","
-    		+ playerName + ","
-    		+ playerRank + ");";
+    		String query = "insert into match_requested values (null," 
+    		+ "'" + token + "',"
+    		+ "'" + new Timestamp(System.currentTimeMillis()).toString() + "',"
+    		+ "'" + boardSize + "',"
+    		+ "'" + playerName + "',"
+    		+ "'" + playerRank + "');";
     		
+    		stmt.execute(query);
     		return true;
     	}
     	catch (Exception e) {
+    		System.out.println(e.getMessage());
     		LOGGER.log(Level.ALL, e.getMessage());
     		return false;
     	}
@@ -185,12 +186,12 @@ public class DBConnector {
 	public boolean insertMoveNode(MoveNode move, int gameID, int parentID) {
 		try {
     		Statement stmt = connection.createStatement();
-    		String query = "insert into movenodes values (" 
-    		+ gameID + ","
-    		+ parentID + ","
-    		+ move.getPosition()[0] + ","
-    		+ move.getPosition()[1] + ","
-    		+ move.isBlacksMove() + ");";
+    		String query = "insert into movenodes values (null," 
+    		+ "'" + gameID + "',"
+    		+ "'" + parentID + "',"
+    		+ "'" + move.getPosition()[0] + "',"
+    		+ "'" + move.getPosition()[1] + "',"
+    		+ "'" + move.isBlacksMove() + "');";
     		ResultSet rs = stmt.executeQuery(query);
     		return true;
     	}
