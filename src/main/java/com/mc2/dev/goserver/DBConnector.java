@@ -83,23 +83,21 @@ public class DBConnector {
 	//-------------------------------------------------------
 	public boolean insertMatchRequest(String token, String jsonString) {
     	JSONParser parser = new JSONParser();
-    	String boardSizeStr = "";
+    	int boardSize;
     	String playerName = "";
-    	String playerRankStr = "";
+    	int playerRank;
     	
     	try {
     		JSONObject jsobj = (JSONObject) parser.parse(jsonString);
-    		boardSizeStr = (String) jsobj.get("boardisze");
+    		boardSize = (Integer) jsobj.get("boardsize");
         	playerName = (String) jsobj.get("nickname");
-        	playerRankStr = (String) jsobj.get("rank");
+        	playerRank = (Integer) jsobj.get("rank");
     	}
     	catch (Exception e) {
     		LOGGER.log(Level.ALL, e.getMessage());
     		return false;
     	}
     	
-    	int boardSize = Integer.parseInt(boardSizeStr);
-    	int rank = Integer.parseInt(playerRankStr);
     	
     	try {
     		Statement stmt = connection.createStatement();
@@ -108,7 +106,7 @@ public class DBConnector {
     		+ System.currentTimeMillis() + ","
     		+ boardSize + ","
     		+ playerName + ","
-    		+ rank + ");";
+    		+ playerRank + ");";
     		
     		return true;
     	}
@@ -238,7 +236,17 @@ public class DBConnector {
 	// a player. returns 0, if no game is found
 	//-------------------------------------------------------
 	public int getGameIDbyToken(String token) {
-		
+		return 4;
+	}
+	
+	//-------------------------------------------------------
+	// String getLatestMove
+	// 
+	// returns the latest MoveNode of the given game as
+	// json-formatted string
+	//-------------------------------------------------------
+	public String getLatestMove(int gameID) {
+		return "4";
 	}
 	
 	//-------------------------------------------------------
@@ -247,7 +255,7 @@ public class DBConnector {
 	// gets all move nodes belonging to the given game
 	//-------------------------------------------------------
 	public ArrayList<MoveNode> getMoveNodes(int gameID) {
-			
+			return null;
 	}
 	
 }
