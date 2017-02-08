@@ -93,7 +93,15 @@ public class FirebaseMsgService {
 	// this Method is only for testing the firebase messages
 	//-------------------------------------------------------
 	public void sendTest(String token) {
-		send(token, new JSONObject());
+		
+		JSONObject data = new JSONObject();
+		JSONObject output = new JSONObject();
+
+		data.put("type", "matched");
+		data.put("start", true);
+		output.put("data", data);
+		
+		send(token, output);
 	}
 
 	//-------------------------------------------------------
