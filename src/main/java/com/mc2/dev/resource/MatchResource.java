@@ -53,7 +53,7 @@ public class MatchResource implements IMatchResource {
     @Path("testFirebase")
 	public String testIT2() {
     	FirebaseMsgService fms = new FirebaseMsgService();
-    	fms.sendTest("hardcodeToken");
+    	fms.sendTest("etDwyj6LdeU:APA91bHpLEyxnrAiCp55PzhabFlA6yThyYyFBmzH9-YIweSWC58NRRoT1a7P1mczFEL1FugokIozITl9oOQOUoUspKqbnQPqmIL9A2zUNBQlwo9A_lBeR0FeXP79lKtLtOZieXB6wJ84");
 		return "";
 	}
 
