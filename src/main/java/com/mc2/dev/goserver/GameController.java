@@ -48,7 +48,7 @@ public class GameController {
     	RunningGame rg = new RunningGame(gmi);
     	MoveNode root = rg.getCurrentNode();
     	
-    	int gameID = DBConnector.getInstance().insertGame(rg, tokenA, tokenB);
+    	int gameID = DBConnector.getInstance().insertGame(rg, tokenA, tokenB, gmi.getBoardSize());
     	DBConnector.getInstance().insertMoveNode(root, gameID, 0);
     	
     	return rg;

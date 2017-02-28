@@ -111,7 +111,6 @@ public class DBConnector {
     		return true;
     	}
     	catch (Exception e) {
-    		System.out.println(e.getMessage());
     		LOGGER.log(Level.ALL, e.getMessage());
     		return false;
     	}
@@ -130,7 +129,7 @@ public class DBConnector {
 
 		try {
 			Statement stmt = connection.createStatement();
-			String query = "delete match_requested where token = " + token;
+			String query = "delete from match_requested where token like '" + token + "';";
 			stmt.executeQuery(query);
 			return true;
 		}
@@ -207,13 +206,14 @@ public class DBConnector {
 	// inserts the given game into the database
 	// returns the id of the entry
 	//-------------------------------------------------------
-	public int insertGame(RunningGame game, String tokenA, String tokenB) {
+	public int insertGame(RunningGame game, String tokenA, String tokenB, int boardSize) {
 		try {
-			String query = "insert into movenodes values (?,?,?)";
+			String query = "insert into running_games values (null,?,?,?)";
     		PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
     		stmt.setString(1, tokenA);
     		stmt.setString(2, tokenB);
-    		stmt.executeUpdate();
+    		stmt.setInt(3, boardSize);
+    		stmt.execute();
 
     		ResultSet rs = stmt.getGeneratedKeys();
     		if (rs.next()) {
