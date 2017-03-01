@@ -66,7 +66,6 @@ public class FirebaseMsgService {
 		      response.append('\r');
 		    }
 		    rd.close();
-		    System.out.println("Response: " + response.toString() + "\nStatusCode: " + connection.getResponseCode());
 		    return checkResponse(response.toString());
 		  } catch (Exception e) {
 			  LOGGER.log(Level.ALL, e.getMessage());
@@ -100,8 +99,6 @@ public class FirebaseMsgService {
 
 		data.put("type", "matched");
 		data.put("start", true);
-		data.put("whiteName", "wawawa");
-		data.put("whiteRank", "2");
 		output.put("data", data);
 		
 		send(token, output);
