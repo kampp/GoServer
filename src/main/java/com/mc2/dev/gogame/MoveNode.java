@@ -29,7 +29,7 @@ public class MoveNode implements Serializable {
     	this.isBlacksMove = !aStarts;
     	int[] pos = {-1, -1};
     	this.position = pos;
-    	
+
     }
     
     // generates a new MoveNode by the given JSON-String
