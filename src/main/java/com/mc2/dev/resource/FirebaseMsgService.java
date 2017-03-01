@@ -115,7 +115,7 @@ public class FirebaseMsgService {
 	// aStart : if set to true, the first token is notified, that the player
 	//			will begin with the first move
 	//-------------------------------------------------------
-	public boolean notifyPairingSuccess(String token1, String token2, boolean aStart) {
+	public boolean notifyPairingSuccess(String token1, String token2, boolean aStart, String name1, String name2) {
 		
 		boolean success1 = false;
 		boolean success2 = false;

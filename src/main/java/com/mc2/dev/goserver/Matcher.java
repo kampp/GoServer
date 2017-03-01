@@ -67,7 +67,7 @@ public class Matcher implements Runnable {
 				// TODO who starts
 				DBConnector.getInstance().deleteMatchRequest(tokenA);
 				DBConnector.getInstance().deleteMatchRequest(tokenB);
-				fms.notifyPairingSuccess(tokenA, tokenB, true);
+				fms.notifyPairingSuccess(tokenA, tokenB, true, nameA, nameB);
 				
 				GameController.getInstance().createOnlineGame(gmi, tokenA, tokenB, true);
 			}
