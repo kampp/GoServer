@@ -25,8 +25,10 @@ public class MoveNode implements Serializable {
     private byte currentOtPeriods;
     
     // generate root move node
-    public MoveNode() {
-    	//TODO
+    public MoveNode(boolean aStarts) {
+    	this.isBlacksMove = !aStarts;
+    	int[] pos = {-1, -1};
+    	this.position = pos;
     }
     
     // generates a new MoveNode by the given JSON-String
