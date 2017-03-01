@@ -22,6 +22,7 @@ public class RunningGame implements Serializable{
         rootNode = new MoveNode(aStarts);
         mainTreeIndices = new ArrayList<Integer>();
     }
+    
     // ----------------------------------------------------------------------
     // function getCurrentNode()
     //

@@ -30,8 +30,6 @@ public class PlayResource implements IPlayResource {
 		int gameID = DBConnector.getInstance().getGameIDbyToken(token);
 		//DBConnector.getInstance().insertPrisonerCount(gameID, jsonString);
 		JSONObject lastMoveNode = DBConnector.getInstance().getLatestMove(gameID);
-    	// receive prisoner count
-    	// database export
 		return null;
 	}
 

@@ -277,6 +277,7 @@ public class DBConnector {
 				json.put("isBlacksNove", rs.getBoolean("isBlacksMove"));
 			}
 		}
+		
 		catch(SQLException sqlEx) {
 			LOGGER.log(Level.ALL, sqlEx.getMessage());
 		}
