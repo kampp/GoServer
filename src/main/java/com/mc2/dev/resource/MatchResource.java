@@ -10,6 +10,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 
+
+
 import com.mc2.dev.goserver.DBConnector;
 import com.mc2.dev.goserver.Matcher;
 
@@ -53,7 +55,7 @@ public class MatchResource implements IMatchResource {
     @Path("testFirebase")
 	public String testIT2() {
     	FirebaseMsgService fms = new FirebaseMsgService();
-    	fms.sendTest("etDwyj6LdeU:APA91bHpLEyxnrAiCp55PzhabFlA6yThyYyFBmzH9-YIweSWC58NRRoT1a7P1mczFEL1FugokIozITl9oOQOUoUspKqbnQPqmIL9A2zUNBQlwo9A_lBeR0FeXP79lKtLtOZieXB6wJ84");
+    	fms.sendTest("ckgrSw6RDDY:APA91bG6OZb4FnGq7IPoDyEjH6OSd_Ezi3AsI96OHHqK0Xlz4dscPMwqVh1Cw42uwGtBdjJ--TvfKuKNHbkch4b7VARuUxZuylvjY3IuZI1NXUQIxLApbHirVJ2IXPwew26VOy6LJQUG");
 		return "";
 	}
 
