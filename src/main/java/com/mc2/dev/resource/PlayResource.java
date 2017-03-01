@@ -8,8 +8,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.json.simple.JSONObject;
-
 import com.mc2.dev.goserver.DBConnector;
 
 @Path("play")
@@ -19,7 +17,7 @@ public class PlayResource implements IPlayResource {
     @Path("{token}")
 	public Response getPlayByToken(@PathParam("token") String token) throws Exception {
 		int gameID = DBConnector.getInstance().getGameIDbyToken(token);
-		JSONObject jsonMoveNode = DBConnector.getInstance().getLatestMove(gameID);
+		String jsonMoveNode = DBConnector.getInstance().getLatestMove(gameID);
 		return Response.ok(jsonMoveNode, MediaType.APPLICATION_JSON).build();
 	}
 

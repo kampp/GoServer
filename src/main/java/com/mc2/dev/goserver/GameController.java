@@ -45,7 +45,7 @@ public class GameController {
     // ----------------------------------------------------------------------
     public RunningGame createOnlineGame(GameMetaInformation gmi, String tokenA, String tokenB, boolean aStarts) {
     	
-    	RunningGame rg = new RunningGame(gmi, aStarts);
+    	RunningGame rg = new RunningGame(gmi);
     	MoveNode root = rg.getCurrentNode();
     	
     	int gameID = DBConnector.getInstance().insertGame(rg, tokenA, tokenB, gmi.getBoardSize());
