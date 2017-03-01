@@ -190,7 +190,16 @@ public class DBConnector {
     		+ "'" + parentID + "',"
     		+ "'" + move.getPosition()[0] + "',"
     		+ "'" + move.getPosition()[1] + "',"
-    		+ "'" + move.isBlacksMove() + "');";
+    		+ "'" + move.isBlacksMove() + "');"
+    		+ "'" + move.getPosition()[1] + "',";
+    		     		
+    		 if (move.isBlacksMove()) {
+    		     	query += "'1');";
+    		  }
+    		  else {
+    			  query += "'1');";
+    		 }
+    		 
     		ResultSet rs = stmt.executeQuery(query);
     		return true;
     	}
@@ -237,7 +246,18 @@ public class DBConnector {
 	// a player. returns 0, if no game is found
 	//-------------------------------------------------------
 	public int getGameIDbyToken(String token) {
-		return 4;
+	 	String query = "select * from test_data where token = "+ token + ";";
+	 	try {
+	 	Statement st = singleton.connection.createStatement();
+	 	ResultSet rs = st.executeQuery(query);
+	 	while (rs.next()) {
+	 		return rs.getInt("id");
+	 		}
+	 	}
+	 	catch(SQLException sqlEx) {
+	 		LOGGER.log(Level.ALL, sqlEx.getMessage());
+	 	}
+	 		return 0;
 	}
 	
 	//-------------------------------------------------------
