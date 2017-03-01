@@ -27,7 +27,11 @@ public class PlayResource implements IPlayResource {
     @Path("{token}")
     @Consumes(	MediaType.APPLICATION_JSON	)
 	public Response postPlayByToken(@PathParam("token") String token, String jsonString) throws Exception {
-		// TODO Auto-generated method stub
+		int gameID = DBConnector.getInstance().getGameIDbyToken(token);
+		//DBConnector.getInstance().insertPrisonerCount(gameID, jsonString);
+		JSONObject lastMoveNode = DBConnector.getInstance().getLatestMove(gameID);
+    	// receive prisoner count
+    	// database export
 		return null;
 	}
 

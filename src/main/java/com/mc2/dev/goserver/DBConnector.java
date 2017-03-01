@@ -271,9 +271,10 @@ public class DBConnector {
 			Statement st = singleton.connection.createStatement();
 			ResultSet rs = st.executeQuery(query);
 			while (rs.next()) {
+				json.put("id", rs.getInt("id"));
 				json.put("posX", rs.getInt("posX"));
 				json.put("posY", rs.getInt("posY"));
-				json.put("idBlacksNove", rs.getBoolean("isBlacksMove"));
+				json.put("isBlacksNove", rs.getBoolean("isBlacksMove"));
 			}
 		}
 		catch(SQLException sqlEx) {
