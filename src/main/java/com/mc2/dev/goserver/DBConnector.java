@@ -189,8 +189,14 @@ public class DBConnector {
     		+ "'" + gameID + "',"
     		+ "'" + parentID + "',"
     		+ "'" + move.getPosition()[0] + "',"
-    		+ "'" + move.getPosition()[1] + "',"
-    		+ "'" + move.isBlacksMove() + "');";
+    		+ "'" + move.getPosition()[1] + "',";
+    		
+    		if (move.isBlacksMove()) {
+    			query += "'1');";
+    		}
+    		else {
+    			query += "'1');";
+    		}
     		ResultSet rs = stmt.executeQuery(query);
     		return true;
     	}
@@ -237,7 +243,18 @@ public class DBConnector {
 	// a player. returns 0, if no game is found
 	//-------------------------------------------------------
 	public int getGameIDbyToken(String token) {
-		return 4;
+		String query = "select * from test_data where token = "+ token + ";";
+		try {
+			Statement st = singleton.connection.createStatement();
+			ResultSet rs = st.executeQuery(query);
+			while (rs.next()) {
+				return rs.getInt("id");
+			}
+		}
+		catch(SQLException sqlEx) {
+			LOGGER.log(Level.ALL, sqlEx.getMessage());
+		}
+		return 0;
 	}
 	
 	//-------------------------------------------------------
@@ -246,8 +263,24 @@ public class DBConnector {
 	// returns the latest MoveNode of the given game as
 	// json-formatted string
 	//-------------------------------------------------------
-	public String getLatestMove(int gameID) {
-		return "4";
+	public JSONObject getLatestMove(int gameID) {
+		String query = "select * from test_data where id = "+ gameID + ";";
+		JSONObject json = new JSONObject();
+		
+		try {
+			Statement st = singleton.connection.createStatement();
+			ResultSet rs = st.executeQuery(query);
+			while (rs.next()) {
+				json.put("posX", rs.getInt("posX"));
+				json.put("posY", rs.getInt("posY"));
+				json.put("idBlacksNove", rs.getBoolean("isBlacksMove"));
+			}
+		}
+		catch(SQLException sqlEx) {
+			LOGGER.log(Level.ALL, sqlEx.getMessage());
+		}
+		
+		return json;
 	}
 	
 	//-------------------------------------------------------
