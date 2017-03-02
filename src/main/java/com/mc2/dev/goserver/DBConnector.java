@@ -159,24 +159,6 @@ public class DBConnector {
 		}
 	}
 	
-	
-	public String getTestString() {
-		
-		String query = "select * from test_data where id = 1";
-		try {
-			Statement st = singleton.connection.createStatement();
-			ResultSet rs = st.executeQuery(query);
-			while (rs.next()) {
-				return rs.getString("text");
-			}
-		}
-		catch(SQLException sqlEx) {
-			LOGGER.log(Level.ALL, sqlEx.getMessage());
-		}
-		
-		return "the mouse is dead";
-	}
-	
 	//-------------------------------------------------------
 	// boolean insertMoveNode
 	// 
