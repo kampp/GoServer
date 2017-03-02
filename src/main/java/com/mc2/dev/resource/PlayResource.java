@@ -9,7 +9,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
+import com.mc2.dev.gogame.MoveNode;
 import com.mc2.dev.goserver.DBConnector;
 
 @Path("play")
@@ -27,10 +29,17 @@ public class PlayResource implements IPlayResource {
     @Path("{token}")
     @Consumes(	MediaType.APPLICATION_JSON	)
 	public Response postPlayByToken(@PathParam("token") String token, String jsonString) throws Exception {
+    	
+    	JSONParser parser = new JSONParser();
+    	JSONObject move = (JSONObject) parser.parse(jsonString);
+    	
 		int gameID = DBConnector.getInstance().getGameIDbyToken(token);
-		//DBConnector.getInstance().insertPrisonerCount(gameID, jsonString);
 		JSONObject lastMoveNode = DBConnector.getInstance().getLatestMove(gameID);
-		return null;
+		Long parentID = (Long) lastMoveNode.get("id");
+		
+		DBConnector.getInstance().setPrisonerCount(gameID, move);
+		DBConnector.getInstance().insertMoveNode(new MoveNode(move, true), gameID, parentID.intValue());
+		return Response.ok().build();
 	}
 
 }

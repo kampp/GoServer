@@ -189,17 +189,15 @@ public class DBConnector {
     		+ "'" + gameID + "',"
     		+ "'" + parentID + "',"
     		+ "'" + move.getPosition()[0] + "',"
-    		+ "'" + move.getPosition()[1] + "',"
-    		+ "'" + move.isBlacksMove() + "');"
     		+ "'" + move.getPosition()[1] + "',";
-    		     		
+    	     		
     		 if (move.isBlacksMove()) {
     		     	query += "'1');";
     		  }
     		  else {
     			  query += "'1');";
     		 }
-    		 
+    		
     		ResultSet rs = stmt.executeQuery(query);
     		return true;
     	}
@@ -219,9 +217,12 @@ public class DBConnector {
 		try {
 			String query = "insert into running_games values (null,?,?,?)";
     		PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-    		stmt.setString(1, tokenA);
-    		stmt.setString(2, tokenB);
-    		stmt.setInt(3, boardSize);
+    		stmt.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+    		stmt.setString(2, tokenA);
+    		stmt.setString(3, tokenB);
+    		stmt.setInt(4, boardSize);
+    		stmt.setInt(5, 0);
+    		stmt.setInt(6, 0);
     		stmt.execute();
 
     		ResultSet rs = stmt.getGeneratedKeys();
@@ -258,6 +259,38 @@ public class DBConnector {
 	 		LOGGER.log(Level.ALL, sqlEx.getMessage());
 	 	}
 	 		return 0;
+	}
+	
+	//-------------------------------------------------------
+	// boolean insertPrisonerCount
+	// 
+	// sets the prisoner count in the given game for the player
+	// given in the move
+	// 
+	// returns true if the db-update was successful, false otherwise
+	//-------------------------------------------------------
+	public boolean setPrisonerCount(int gameID, JSONObject inputMove) {
+		int count = (Integer) inputMove.get("PrisonerCount");
+		String query = "";
+		
+		if (inputMove.get("isBlacksMove") == "false") {
+			query = "update running_games where id = " + gameID + " set prisonerA = " + count + ";";   
+		}
+		else {
+			query = "update running_games where id = " + gameID + " set prisonerB = " + count + ";";  
+		}
+		
+		try {
+			Statement st = singleton.connection.createStatement();
+			st.executeQuery(query);
+			return true;
+		}
+		catch (Exception e) {
+			LOGGER.log(Level.ALL, e.getMessage());
+		}
+	
+		return false;
+		
 	}
 	
 	//-------------------------------------------------------

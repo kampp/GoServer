@@ -36,7 +36,7 @@ public class Matcher implements Runnable {
 			int rankA = entries.getInt("rank");
 		
 			String tokenB = "";
-			String nameB;
+			String nameB = "";
 			int rankB;
 			boolean matched = false;
 			
