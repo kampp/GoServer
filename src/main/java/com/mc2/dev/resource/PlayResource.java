@@ -30,16 +30,31 @@ public class PlayResource implements IPlayResource {
     @Consumes(	MediaType.APPLICATION_JSON	)
 	public Response postPlayByToken(@PathParam("token") String token, String jsonString) throws Exception {
     	
+    	jsonString.replace("\\", "");
     	JSONParser parser = new JSONParser();
-    	JSONObject move = (JSONObject) parser.parse(jsonString);
+    	JSONObject jsonMove = (JSONObject) parser.parse(jsonString);
+    	System.out.println("");
+    	System.out.println(jsonMove.toJSONString());
     	
 		int gameID = DBConnector.getInstance().getGameIDbyToken(token);
+		System.out.println("gameID: " + gameID);
 		JSONObject lastMoveNode = DBConnector.getInstance().getLatestMove(gameID);
-		Long parentID = (Long) lastMoveNode.get("id");
+		System.out.println("lastMoveNode: " + lastMoveNode.toJSONString());
+		int parentID = Integer.parseInt(lastMoveNode.get("id").toString());
+		System.out.println("parentID: "+ parentID);
 		
-		DBConnector.getInstance().setPrisonerCount(gameID, move);
-		DBConnector.getInstance().insertMoveNode(new MoveNode(move, true), gameID, parentID.intValue());
-		return Response.ok().build();
+		DBConnector.getInstance().setPrisonerCount(gameID, jsonMove);
+		DBConnector.getInstance().insertMoveNode(new MoveNode(jsonMove), gameID, parentID);
+		
+		FirebaseMsgService fmsg = new FirebaseMsgService();
+		String tokens[] = DBConnector.getInstance().getTokensByGameID(gameID);
+		if (token.equals(tokens[0])) {
+			if (fmsg.notifyMovePlayed(tokens[1])) return Response.ok().build();
+		} else {
+			if (fmsg.notifyMovePlayed(tokens[0])) return Response.ok().build();
+		}
+		
+		return Response.serverError().build();
 	}
 
 }

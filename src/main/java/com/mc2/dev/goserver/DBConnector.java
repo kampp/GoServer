@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.mariadb.jdbc.MySQLDataSource;
 
 import com.mc2.dev.gogame.MoveNode;
 import com.mc2.dev.gogame.RunningGame;
@@ -173,12 +174,12 @@ public class DBConnector {
     		+ "'" + move.getPosition()[0] + "',"
     		+ "'" + move.getPosition()[1] + "',";
     	     		
-    		 if (move.isBlacksMove()) {
-    		     	query += "'1');";
-    		  }
-    		  else {
-    			  query += "'1');";
-    		 }
+    		if (move.isBlacksMove()) {
+    			query += "'1');";
+    		}
+    		else {
+    			query += "'0');";
+    		}
     		
     		ResultSet rs = stmt.executeQuery(query);
     		return true;
@@ -197,16 +198,15 @@ public class DBConnector {
 	//-------------------------------------------------------
 	public int insertGame(RunningGame game, String tokenA, String tokenB, int boardSize) {
 		try {
-			String query = "insert into running_games values (null,?,?,?)";
+						
+			String query = "insert into running_games (created_at, tokenA, tokenB, boardSize, prisonerA, prisonerB) values (?,?,?,?,0,0);";
     		PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
     		stmt.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
     		stmt.setString(2, tokenA);
     		stmt.setString(3, tokenB);
     		stmt.setInt(4, boardSize);
-    		stmt.setInt(5, 0);
-    		stmt.setInt(6, 0);
     		stmt.execute();
-
+    		
     		ResultSet rs = stmt.getGeneratedKeys();
     		if (rs.next()) {
     		   return rs.getInt(1);
@@ -217,7 +217,8 @@ public class DBConnector {
     	}
     	catch (Exception e) {
     		LOGGER.log(Level.ALL, e.getMessage());
-    		return 0;
+    		System.out.println("Failure in DBConnector: " + e.getMessage());
+    		return -1;
     	}
 	}
 	
@@ -229,18 +230,48 @@ public class DBConnector {
 	// a player. returns 0, if no game is found
 	//-------------------------------------------------------
 	public int getGameIDbyToken(String token) {
-	 	String query = "select * from test_data where token = "+ token + ";";
-	 	try {
-	 	Statement st = singleton.connection.createStatement();
-	 	ResultSet rs = st.executeQuery(query);
-	 	while (rs.next()) {
-	 		return rs.getInt("id");
+	 	String query = "select id from running_games where tokenA = ? or tokenB = ?;";
+		try {
+			PreparedStatement stmt = connection.prepareStatement(query);
+			stmt.setString(1, token);
+			stmt.setString(2, token);
+			stmt.execute();
+		 	
+		 	ResultSet rs = stmt.getResultSet();
+		 	while (rs.next()) {
+		 		return rs.getInt(1);
 	 		}
 	 	}
 	 	catch(SQLException sqlEx) {
+	 		System.out.println("getGameIDByToken: " + sqlEx.getMessage());
 	 		LOGGER.log(Level.ALL, sqlEx.getMessage());
 	 	}
-	 		return 0;
+	 	return -1;
+	}
+	
+	//-------------------------------------------------------
+	// String[] getTokensByGameID
+	// 
+	// returns a String array containing the tokens of both 
+	// players participating in the game indicated by gameID.
+	// Returns null if gameID does not exist or on Error. 
+	//-------------------------------------------------------
+	public String[] getTokensByGameID(int gameID) {
+		String query = "select * from running_games where id = ?;";
+		try {
+			PreparedStatement stmt = connection.prepareStatement(query);
+			stmt.setInt(1, gameID);
+			stmt.execute();
+			
+			ResultSet rs = stmt.getResultSet();
+			if (rs.next()) {
+				return new String[]{rs.getString("tokenA"), rs.getString("tokenB")};
+			}
+		} catch (SQLException sqlE) {
+			System.out.println("getTokenByGameID: " + sqlE.getMessage());
+			LOGGER.log(Level.ALL, sqlE.getMessage());
+		}
+		return null;
 	}
 	
 	//-------------------------------------------------------
@@ -252,7 +283,7 @@ public class DBConnector {
 	// returns true if the db-update was successful, false otherwise
 	//-------------------------------------------------------
 	public boolean setPrisonerCount(int gameID, JSONObject inputMove) {
-		int count = (Integer) inputMove.get("PrisonerCount");
+		int count = Integer.parseInt(inputMove.get("prisonerCount").toString());
 		String query = "";
 		
 		if (inputMove.get("isBlacksMove") == "false") {
@@ -268,6 +299,7 @@ public class DBConnector {
 			return true;
 		}
 		catch (Exception e) {
+			System.out.println("setPrisonerCount: " + e.getMessage());
 			LOGGER.log(Level.ALL, e.getMessage());
 		}
 	
@@ -282,7 +314,7 @@ public class DBConnector {
 	// json-formatted string
 	//-------------------------------------------------------
 	public JSONObject getLatestMove(int gameID) {
-		String query = "select * from test_data where id = "+ gameID + ";";
+		String query = "select * from movenodes where gameID = "+ gameID + ";";
 		JSONObject json = new JSONObject();
 		
 		try {
@@ -292,11 +324,12 @@ public class DBConnector {
 				json.put("id", rs.getInt("id"));
 				json.put("posX", rs.getInt("posX"));
 				json.put("posY", rs.getInt("posY"));
-				json.put("isBlacksNove", rs.getBoolean("isBlacksMove"));
+				json.put("isBlacksMove", rs.getInt("isBlacksMove"));
 			}
 		}
 		
 		catch(SQLException sqlEx) {
+			System.out.println("getLatestMoveNode: " + sqlEx.getMessage());
 			LOGGER.log(Level.ALL, sqlEx.getMessage());
 		}
 		

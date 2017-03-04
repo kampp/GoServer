@@ -2,6 +2,7 @@ package com.mc2.dev.goserver;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,7 +38,7 @@ public class Matcher implements Runnable {
 		
 			String tokenB = "";
 			String nameB = "";
-			int rankB;
+			int rankB = 0;
 			boolean matched = false;
 			
 			Timestamp currentSysTime = new Timestamp(System.currentTimeMillis());
@@ -64,13 +65,21 @@ public class Matcher implements Runnable {
 			if (matched) {
 				GameMetaInformation gmi = new GameMetaInformation();
 				gmi.setBoardSize(boardSize);
-				// TODO who starts
+				Random rand = new Random();
+				boolean playerAStarting = rand.nextBoolean();
+				if (playerAStarting)
+				{
+					gmi.setBlackName(nameA);
+					gmi.setWhiteName(nameB);
+				} else {
+					gmi.setBlackName(nameB);
+					gmi.setWhiteName(nameA);
+				}
 				DBConnector.getInstance().deleteMatchRequest(tokenA);
 				DBConnector.getInstance().deleteMatchRequest(tokenB);
-				fms.notifyPairingSuccess(tokenA, tokenB, true, nameA, nameB);
+				fms.notifyPairingSuccess(tokenA, tokenB, playerAStarting, nameA, nameB, rankA, rankB);
 				
-				
-				GameController.getInstance().createOnlineGame(gmi, tokenA, tokenB, true);
+				GameController.getInstance().createOnlineGame(gmi, tokenA, tokenB);
 			}
 		}
 		catch (Exception e) {

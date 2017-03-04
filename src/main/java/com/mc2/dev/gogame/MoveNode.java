@@ -3,6 +3,10 @@ package com.mc2.dev.gogame;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 // ----------------------------------------------------------------------
 // class MoveNode
 //
@@ -29,13 +33,34 @@ public class MoveNode implements Serializable {
     	this.isBlacksMove = !aStarts;
     	int[] pos = {-1, -1};
     	this.position = pos;
-
+    	this.parent = null;
+    	this.children = new ArrayList<MoveNode>();
     }
     
     // generates a new MoveNode by the given JSON-String
     // the string is recieved through the POST:[..]/play method
     public MoveNode(String jsonStr, boolean isBlacksMove) {
     	//TODO
+    }
+    
+    public MoveNode(JSONObject jsonObj) {
+        try {
+        	JSONParser parser = new JSONParser();
+            JSONObject mn = (JSONObject) parser.parse(jsonObj.get("moveNode").toString());
+            this.actionType = GameMetaInformation.actionType.valueOf(mn.get("actionType" ).toString());
+            this.isBlacksMove = mn.get("isBlacksMove").toString().equals("true");
+            JSONObject pos = (JSONObject) mn.get("position");
+            int x = Integer.parseInt(pos.get("x").toString());
+            int y = Integer.parseInt(pos.get("y").toString());
+            this.position = new int[]{x, y};
+            System.out.println(mn.toString());
+            if (mn.get("comment") != null) this.comment = mn.get("comment").toString();
+            else this.comment = null;
+            this.parent = null;
+            this.children = new ArrayList<MoveNode>();
+        } catch (ParseException e) {
+			e.printStackTrace();
+		}
     }
 
 

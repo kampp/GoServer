@@ -116,7 +116,7 @@ public class FirebaseMsgService {
 	// aStart : if set to true, the first token is notified, that the player
 	//			will begin with the first move
 	//-------------------------------------------------------
-	public boolean notifyPairingSuccess(String token1, String token2, boolean aStart, String name1, String name2) {
+	public boolean notifyPairingSuccess(String token1, String token2, boolean aStart, String name1, String name2, int rank1, int rank2) {
 		
 		boolean success1 = false;
 		boolean success2 = false;
@@ -127,6 +127,8 @@ public class FirebaseMsgService {
 		
 		data.put("type", "matched");
 		data.put("start", aStart);
+		data.put("whiteName", name2);
+		data.put("whiteRank", rank2);
 		output.put("data", data);
 		
 		if (send(token1, output)) {
@@ -135,8 +137,11 @@ public class FirebaseMsgService {
 		// TODO else: retry
 		
 		output.clear();
+		System.out.println(output.toJSONString());
 		data.remove("start");
 		data.put("start", !aStart);
+		data.put("blackName", name1);
+		data.put("blackRank", rank1);
 		output.put("data", data);
 		if (send(token2, output)) {
 			success1 = true;

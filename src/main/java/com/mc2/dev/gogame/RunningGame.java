@@ -17,11 +17,10 @@ public class RunningGame implements Serializable{
     private ArrayList<Integer> mainTreeIndices;      // contains indices to the current node in use, to get nodes from other branches, alter this array
 
 
-    public RunningGame(GameMetaInformation gmi, boolean aStarts)
+    public RunningGame(GameMetaInformation gmi)
     {
        this.gmi = gmi;
-       rootNode = new MoveNode(aStarts);
-       rootNode = new MoveNode(aStarts);
+       rootNode = new MoveNode(gmi.getHandicap() > 0 && gmi.getHandicap() != GameMetaInformation.INVALID_INT);
        mainTreeIndices = new ArrayList<Integer>();
     }
     

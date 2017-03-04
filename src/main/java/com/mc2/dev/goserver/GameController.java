@@ -39,20 +39,17 @@ public class GameController {
     // ----------------------------------------------------------------------
     // RunningGame createOnlineGame()
     //
-    // returns a running game with the root node added. this game is based on 
-    // firebase-tokens as players 
-    // requires both token, as well as the info, if A starts or not
+    // this game is based on firebase-tokens as players requires both tokens. 
+    // The game including the root node is saved to the DB
     // ----------------------------------------------------------------------
-    public RunningGame createOnlineGame(GameMetaInformation gmi, String tokenA, String tokenB, boolean aStarts) {
+    public void createOnlineGame(GameMetaInformation gmi, String tokenA, String tokenB) {
     	
-    	RunningGame rg = new RunningGame(gmi, aStarts);
-    	MoveNode root = rg.getCurrentNode();
+    	RunningGame rg = new RunningGame(gmi);
+    	MoveNode root = rg.getRootNode();
     	
     	int gameID = DBConnector.getInstance().insertGame(rg, tokenA, tokenB, gmi.getBoardSize());
+    	System.out.println("GameController: GameID: " + gameID);
     	DBConnector.getInstance().insertMoveNode(root, gameID, 0);
-    	
-    	
-    	return rg;
     }
     
     // ----------------------------------------------------------------------
