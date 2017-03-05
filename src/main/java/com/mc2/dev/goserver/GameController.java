@@ -45,11 +45,10 @@ public class GameController {
     public void createOnlineGame(GameMetaInformation gmi, String tokenA, String tokenB) {
     	
     	RunningGame rg = new RunningGame(gmi);
-    	MoveNode root = rg.getRootNode();
     	
     	int gameID = DBConnector.getInstance().insertGame(rg, tokenA, tokenB, gmi.getBoardSize());
     	System.out.println("GameController: GameID: " + gameID);
-    	DBConnector.getInstance().insertMoveNode(root, gameID, 0);
+    	DBConnector.getInstance().insertMoveNode(rg.getRootNode(), gameID, 0);
     }
     
     // ----------------------------------------------------------------------

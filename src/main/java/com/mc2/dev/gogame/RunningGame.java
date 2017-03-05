@@ -20,7 +20,7 @@ public class RunningGame implements Serializable{
     public RunningGame(GameMetaInformation gmi)
     {
        this.gmi = gmi;
-       rootNode = new MoveNode(gmi.getHandicap() > 0 && gmi.getHandicap() != GameMetaInformation.INVALID_INT);
+       rootNode = new MoveNode(gmi.getHandicap() == 0);
        mainTreeIndices = new ArrayList<Integer>();
     }
     

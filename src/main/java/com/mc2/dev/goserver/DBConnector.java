@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.mariadb.jdbc.MySQLDataSource;
 
 import com.mc2.dev.gogame.MoveNode;
 import com.mc2.dev.gogame.RunningGame;
@@ -166,26 +165,36 @@ public class DBConnector {
 	// inserts the given MoveNode into the database
 	//-------------------------------------------------------
 	public boolean insertMoveNode(MoveNode move, int gameID, int parentID) {
+		String query = "insert into move_nodes (gameID, parentID, posX, posY, isBlacksMove, actionType, comment, isPrisoner) "
+				+ "values (?,?,?,?,?,?,?,?);"; 
+		int isBlackMove;
+		if (move.isBlacksMove()) isBlackMove = 1;
+		else isBlackMove = 0;
+		int isPrisoner;
+		if (move.isPrisoner()) isPrisoner = 1;
+		else isPrisoner = 0;
+		String acType;
+		if (move.getActionType() == null) acType = null;
+		else acType = move.getActionType().toString();
 		try {
-    		Statement stmt = connection.createStatement();
-    		String query = "insert into movenodes values (null," 
-    		+ "'" + gameID + "',"
-    		+ "'" + parentID + "',"
-    		+ "'" + move.getPosition()[0] + "',"
-    		+ "'" + move.getPosition()[1] + "',";
-    	     		
-    		if (move.isBlacksMove()) {
-    			query += "'1');";
-    		}
-    		else {
-    			query += "'0');";
-    		}
+    		PreparedStatement stmt = connection.prepareStatement(query);
     		
-    		ResultSet rs = stmt.executeQuery(query);
+    		stmt.setInt(1, gameID);
+    		stmt.setInt(2, parentID);
+    		stmt.setInt(3, move.getPosition()[0]);
+    		stmt.setInt(4, move.getPosition()[1]);
+    		stmt.setInt(5, isBlackMove);
+    		stmt.setString(6, acType);
+    		stmt.setString(7, move.getComment());
+    		stmt.setInt(8, isPrisoner);
+    		
+    		stmt.execute();
     		return true;
     	}
     	catch (Exception e) {
     		LOGGER.log(Level.ALL, e.getMessage());
+    		System.out.println("insertMoveNode: ");
+    		e.printStackTrace();
     		return false;
     	}
 	}
@@ -287,10 +296,10 @@ public class DBConnector {
 		String query = "";
 		
 		if (inputMove.get("isBlacksMove") == "false") {
-			query = "update running_games where id = " + gameID + " set prisonerA = " + count + ";";   
+			query = "update running_games set prisonerA = " + count + " where id = " + gameID + ";";   
 		}
 		else {
-			query = "update running_games where id = " + gameID + " set prisonerB = " + count + ";";  
+			query = "update running_games set prisonerB = " + count + " where id = " + gameID + ";";  
 		}
 		
 		try {
@@ -314,7 +323,7 @@ public class DBConnector {
 	// json-formatted string
 	//-------------------------------------------------------
 	public JSONObject getLatestMove(int gameID) {
-		String query = "select * from movenodes where gameID = "+ gameID + ";";
+		String query = "select * from move_nodes where gameID = "+ gameID + ";";
 		JSONObject json = new JSONObject();
 		
 		try {
@@ -325,6 +334,9 @@ public class DBConnector {
 				json.put("posX", rs.getInt("posX"));
 				json.put("posY", rs.getInt("posY"));
 				json.put("isBlacksMove", rs.getInt("isBlacksMove"));
+				json.put("actionType", rs.getString("actionType"));
+				json.put("comment", rs.getString("comment"));
+				json.put("isPrisoner", rs.getInt("isPrisoner"));
 			}
 		}
 		

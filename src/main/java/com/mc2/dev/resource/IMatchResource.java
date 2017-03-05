@@ -4,8 +4,6 @@ package com.mc2.dev.resource;
 import javax.ws.rs.core.*;
 
 public interface IMatchResource {
-
-	String testIt();
 	
     /**
      * send data for matchmaking

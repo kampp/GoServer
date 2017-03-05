@@ -35,6 +35,7 @@ public class MoveNode implements Serializable {
     	this.position = pos;
     	this.parent = null;
     	this.children = new ArrayList<MoveNode>();
+    	this.actionType = GameMetaInformation.actionType.MOVE;
     }
     
     // generates a new MoveNode by the given JSON-String

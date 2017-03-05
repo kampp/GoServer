@@ -11,7 +11,10 @@ import java.util.logging.Logger;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.mc2.dev.goserver.DBConnector;
 
 //-------------------------------------------------------
@@ -52,6 +55,8 @@ public class FirebaseMsgService {
 
 		 } catch (Exception e) {
 			 LOGGER.log(Level.ALL, e.getMessage());
+			 System.out.println("Firebase send: " + e.getMessage());
+			 e.printStackTrace();
 			 return false;
 		 }
 		 
@@ -69,6 +74,8 @@ public class FirebaseMsgService {
 		    return checkResponse(response.toString());
 		  } catch (Exception e) {
 			  LOGGER.log(Level.ALL, e.getMessage());
+			  System.out.println("Firebase send: " + e.getMessage());
+			  e.printStackTrace();
 			  return false;
 		  }
 		 
@@ -83,6 +90,17 @@ public class FirebaseMsgService {
 	// String response : response from firebase server
 	//-------------------------------------------------------
 	private boolean checkResponse(String response) {
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject res = (JSONObject) parser.parse(response);
+			System.out.println(res.toJSONString());
+			System.out.println(res.get("success").toString());
+			if ("1".equals(res.get("success").toString())) return true;
+		} catch (ParseException pe)
+		{
+			System.out.println("checkResponse: " + pe.getMessage());
+			pe.printStackTrace();
+		}
 		return false;
 	}
 	
@@ -137,8 +155,8 @@ public class FirebaseMsgService {
 		// TODO else: retry
 		
 		output.clear();
-		System.out.println(output.toJSONString());
-		data.remove("start");
+		data.clear();
+		data.put("type", "matched");
 		data.put("start", !aStart);
 		data.put("blackName", name1);
 		data.put("blackRank", rank1);
