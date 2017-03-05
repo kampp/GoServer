@@ -1,0 +1,77 @@
+#%RAML 1.0
+title: GoApp
+version: 1.0
+protocols: HTTP
+mediaType: application/json
+
+/match:
+  /{token}:
+    post:
+      description: post a new match request to server;
+      body:
+        application/json:
+          {
+            "nickName" : string,
+            "boardSize" : integer,
+            "rank" : integer
+          }
+      responses:
+        200:
+          body:
+            application/json:
+              example: {}
+    delete:
+      description: delete posted match request;
+      body:
+        application/json:
+          null
+      responses:
+        200:
+          body:
+            application/json:
+              example: {}
+
+/play:
+  /{token}:
+    get:
+      description: get move information done by opponent;
+      body:
+        application/json:
+          null
+      responses:
+        200:
+          body:
+            application/json:
+              {
+                "id" : integer,
+                "posX" : integer,
+                "posY" : integer,
+                "isBlacksMove" : integer,
+                "actionType" : string,
+                "comment" : string,
+                "isPrisoner" : integer
+              }
+    post:
+      description: send move information to server;
+      body:
+        application/json:
+          {
+            "moveNode": {
+                "actionType" : string,
+                "isBlacksMove" : boolean,
+                "isPrisoner" : boolean,
+                "position" : {
+                    "x" : integer,
+                    "y" : integer
+                  },
+                "comment" : string,
+                "time" : long,
+                "otPeriods" : byte
+              },
+            "prisonerCount" : integer
+          }
+      responses:
+        200:
+          body:
+            application/json:
+              example: {}
